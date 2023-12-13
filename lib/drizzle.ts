@@ -6,8 +6,8 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm'
-import { sql } from '@vercel/postgres'
-import { drizzle } from 'drizzle-orm/vercel-postgres'
+import { Pool } from 'pg'
+import { drizzle } from 'drizzle-orm/node-postgres'
 
 export const UsersTable = pgTable(
   'users',
@@ -28,5 +28,8 @@ export const UsersTable = pgTable(
 export type User = InferSelectModel<typeof UsersTable>
 export type NewUser = InferInsertModel<typeof UsersTable>
 
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+})
 // Connect to Vercel Postgres
-export const db = drizzle(sql)
+export const db = drizzle(pool)
