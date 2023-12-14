@@ -1,6 +1,11 @@
 import { sql } from '@vercel/postgres'
 
 export default async function Neon() {
-  const data = await sql`SELECT * FROM users`
+  let data
+  try {
+    data = await sql`SELECT * FROM users`
+  } catch (error) {
+    data = error
+  }
   return <pre>{JSON.stringify(data, null, 2)}</pre>
 }

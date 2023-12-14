@@ -5,11 +5,16 @@ const pool = new Pool({
 })
 
 export default async function Neon() {
-  const connection = await pool.connect()
-  const res = await pool.query('SELECT * FROM users')
-  const data = res.rows
-  await connection.release()
-  await pool.end()
+  let data
+  try {
+    const connection = await pool.connect()
+    const res = await pool.query('SELECT * FROM users')
+    data = res.rows
+    await connection.release()
+    await pool.end()
+  } catch (error) {
+    data = error
+  }
 
   return <pre>{JSON.stringify(data, null, 2)}</pre>
 }
